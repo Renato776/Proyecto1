@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+ <head>
+	<meta charset="utf-8" />
+  <link rel="stylesheet" href="styles.css">
+  <title> Redes 2 - Practica 4 - Vista de reportes </title>
+ </head>
+ <body>
+   <h1>Vista de reporte<h1>
+    <div id="practica4">
+   <div class="field">
+    <div class="lab"><label>Carnet</label></div>
+    <input type="text" v-model="reporte.carnet" disabled/>
+   </div>
+
+   <div class="field">
+    <div class="lab"><label>Nombre</label></div>
+    <input type="text" v-model="reporte.name" disabled/>
+   </div>
+
+   <div class="field">
+    <div class="lab"><label>Curso/Proyecto</label></div>
+    <input type="text" v-model="reporte.course" disabled/>
+   </div>
+
+   <div class="field">
+    <div class="lab"><label>Procesado por</label></div>
+    <input type="text" v-model="reporte.server" disabled/>
+   </div>
+
+   <div class="field">
+    <div class="lab"><label>Fecha</label></div>
+    <input type="text" v-model="fecha" disabled/>
+   </div>
+
+   <div class="field">
+    <div class="lab"><label>Cuerpo del reporte</label></div>
+    <textarea cols="50" rows="5" v-model="reporte.body" disabled>
+    </textarea>
+   </div>
+   <h4>{{reporte.attended}}</h4>
+   <a href="index.html">Regresar</a>
+    </div>
+ </body>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+	<script>
+    const url = 'https://proyecto.grupo16-api.codes';
+		const app = new Vue({
+			el: '#practica4',
+      data: {
+        fecha : (new Date()).toString().replace(/GMT.+$/,""),
+        reporte : {}
+      },
+
+      methods: {
+        format(s){
+          s = s.trim();
+          const a = s[0];
+          return `${a.toUpperCase()}${s.slice(1)}`;
+        }
+      },
+
+      created(){
+      let l = window.location.search;
+      l = new URLSearchParams(l);
+      l = Number(l.get('id'));
+      if(isNaN(l))return; 
+        axios.get(url+'/reports/'+l).then(response => {
+          this.reporte = response.data;
+          this.reporte.attended = this.format(this.reporte.attended);
+        }).catch(err=> { console.log(err) });
+      }
+		}); 
+	</script>
+</html>

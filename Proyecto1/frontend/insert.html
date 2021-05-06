@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+ <head>
+	<meta charset="utf-8" />
+  <link rel="stylesheet" href="styles.css">
+  <title> Redes 2 - Practica 4 - Ingresar de reportes </title>
+ </head>
+ <body>
+   <h1>Ingreso de reportes de practicantes<h1>
+
+   <div id="practica4">
+   <div class="field">
+    <div class="lab"><label>Carnet</label></div>
+    <input type="number" v-model="reporte.carnet" />
+   </div>
+
+   <div class="field">
+    <div class="lab"><label>Nombre</label></div>
+    <input type="text" v-model="reporte.name" />
+   </div>
+
+   <div class="field">
+    <div class="lab"><label>Curso/Proyecto</label></div>
+    <input type="text" v-model="reporte.course" />
+   </div>
+
+   <div class="field">
+    <div class="lab"><label>Cuerpo del reporte</label></div>
+    <textarea v-model="reporte.body" cols="60" rows="5"></textarea>
+   </div>
+
+   <div class="subir">
+     <a class="back" href="index.html">Regresar</a>
+     <div></div>
+     <button type="button" class="button" @click="registrar"> Subir </button>
+   </div>
+
+   </div>
+ </body>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+	<script>
+    const url = 'https://proyecto.grupo16-api.codes';
+		const app = new Vue({
+			el: '#practica4',
+      data: {
+        reporte : {
+          carnet : 0,
+          name : '',
+          course : '',
+          body: ''
+        }
+      },
+
+      methods: {
+        format(s){
+          s = s.trim();
+          const a = s[0];
+          return `${a.toUpperCase()}${s.slice(1)}`;
+        },
+        registrar(){
+          axios.post(url+'/reports', this.reporte).then(response => {
+          alert('Reporte ingresado con exito por el servidor: ' +response.data.server);
+        }).catch(err=> { alert(err) });
+        }
+      }
+		}); 
+	</script>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+ <head>
+   <meta charset="utf-8" />
+  <link rel="stylesheet" href="styles.css">
+  <title> Redes 2 - Practica 4 </title>
+ </head>
+ <body>
+   <div id="practica4">
+   <div>
+   <h1>Listado de reportes<h1>
+   <div class="searchbar">
+    <label>Carnet:</label>
+    <input type="text" v-model="carnet" style="width: 100%;" />
+    <button type="button" class="button" @click="buscar"> Buscar </button>
+    <a href="insert.html"> Ingresar </a>
+   </div>
+   </div>
+   <table>
+    <caption> <strong>{{servidor}}</strong> </caption>
+    <thead>
+      <tr>
+        <th> ID </th>
+        <th> Carnet </th>
+        <th> Nombre </th>
+        <th> Proyecto </th>
+        <th> Fecha </th>
+        <th> Servidor </th>
+      </tr>
+      <tbody>
+        <tr v-for="report in reportes" :key="report.id">
+          <td> <a :href="'reporte.html?id='+report.id">
+              {{report.id}} 
+               </a>
+          </td>
+          <td> {{report.carnet}} </td>
+          <td> {{report.name}} </td>
+          <td> {{report.course}} </td>
+          <td> {{fecha}} </td>
+          <td> {{report.server}} </td>
+        </tr>
+      </tbody>
+    </thead>
+   </table>
+   </div>
+ </body>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+	<script>
+    const url = 'https://proyecto.grupo16-api.codes';
+		const app = new Vue({
+			el: '#practica4',
+      data: {
+        fecha : (new Date()).toString().replace(/GMT.+$/,""),
+        carnet : '',
+        servidor : 'Loading ...',
+        reportes : []
+      },
+      methods: {
+        format(s){
+          s = s.trim();
+          const a = s[0];
+          return `${a.toUpperCase()}${s.slice(1)}`;
+        },
+        buscar(){
+          axios.get(url+'/reports/carnet/'+this.carnet)
+            .then(response => {
+              this.reportes = response.data.reports;
+              this.servidor = this.format(response.data.attended);
+            }).catch(err=> { console.log(err) });
+        }
+      },
+      created(){
+          axios.get(url+'/reports').then(response => {
+            this.reportes = response.data.reports;
+            this.servidor = this.format(response.data.attended);
+          }).catch(err=> { console.log(err) });
+      }
+		}); 
+	</script>
+</html>
