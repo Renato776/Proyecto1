@@ -1,0 +1,57 @@
+syntax = "proto3";
+package pb;
+
+option go_package = "gitlab.com/renato776/proyecto-g16/backend/pb";
+message Report {
+    int32 id = 1;
+    string name = 2;
+    int32 carnet = 3;
+    string course = 4;
+    string body = 5;
+    string server = 6;
+}
+
+message Asistencia {
+    string name = 1;
+    string event = 2;
+    int32 carnet = 3;
+    string img = 4;
+    int32 id = 5;
+    string server = 6;
+}
+
+message ReportCollection {
+    string attended = 1;
+    repeated Report reports = 2;
+}
+
+message IndividualReport {
+    string attended = 1;
+    Report report = 2;
+}
+
+message AsistenciasCollection {
+    string attended = 1;
+    repeated Asistencia asistencias = 2;
+}
+
+message IndividualAsistencia {
+    string attended = 1;
+    Asistencia asistencia = 2;
+}
+
+message Filtro {
+    int32 parametro = 1;
+}
+
+service AsistenciaServ {
+    rpc Crear(Asistencia) returns (IndividualAsistencia) {}
+    rpc Obtener_por_ID(Filtro) returns (AsistenciasCollection) {}
+    rpc Obtener_por_CARNET(Filtro) returns (AsistenciasCollection) {}
+}
+
+service ReporteServ {
+    rpc Crear(Report) returns (IndividualReport) {}
+    rpc Obtener_por_ID(Filtro) returns (ReportCollection) {}
+    rpc Obtener_por_CARNET(Filtro) returns (ReportCollection) {}
+}
